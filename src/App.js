@@ -1,23 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import Home from "./components/Home";
+import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
+import Detail from "./components/Detail";
+import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <Router>
+        <Link to="/">
+          <h1 className="title">Infinite Scrolling</h1>
+        </Link>
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route path="/posts/:id">
+            <Detail />
+          </Route>
+        </Switch>
+      </Router>
     </div>
   );
 }
