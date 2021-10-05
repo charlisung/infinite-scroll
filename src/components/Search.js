@@ -1,4 +1,5 @@
 import { BsSearch, BsArrowRepeat } from "react-icons/bs";
+
 const Search = ({ searchChangeHandle, term, setTerm, setLimit }) => {
   return (
     <form

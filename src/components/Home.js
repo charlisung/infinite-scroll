@@ -1,31 +1,23 @@
-import { useState, useEffect } from "react";
-import UseInfiniteScroll from "./UseInfiniteScroll";
-import UseFetch from "./UseFetch";
-import loading from "../imgs/loading.gif";
+import { useState, useEffect, useRef, useCallback } from "react";
+import useFetch from "../useFetch";
 import Search from "./Search";
 import List from "./List";
+import Loading from "../imgs/Loading";
+import Title from "./Title";
 
 const Home = () => {
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const [term, setTerm] = useState("");
   const [article, setArticle] = useState(null);
+  const [isFetching, setIsFetching] = useState(false);
 
-  const { data, isPending, error } = UseFetch(
+  const { data, isPending, error } = useFetch(
     `https://jsonplaceholder.typicode.com/posts?_limit=${limit}`
   );
 
   useEffect(() => {
     setArticle(data);
   }, [data]);
-
-  const fetchMoreLists = () => {
-    setTimeout(() => {
-      setLimit(limit + 5);
-      setIsFetching(false);
-    }, 500);
-  };
-
-  const [isFetching, setIsFetching] = UseInfiniteScroll(fetchMoreLists);
 
   const searchChangeHandle = () => {
     const updatedArticle = article.filter(
@@ -34,20 +26,40 @@ const Home = () => {
     setArticle(updatedArticle);
   };
 
+  const observer = useRef();
+  const lastArticleRef = useCallback(
+    (node) => {
+      if (isPending) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          setIsFetching(true);
+          setTimeout(() => {
+            setLimit((prev) => prev + 5);
+            setIsFetching(false);
+          }, 500);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [isPending]
+  );
+
   return (
     <div>
       {error && <div>{error}</div>}
-      {isPending && <img src={loading} alt="loadings" />}
+      {isPending && <Loading />}
       {article && (
         <div>
+          <Title setLimit={setLimit} setTerm={setTerm} />
           <Search
             searchChangeHandle={searchChangeHandle}
             term={term}
             setTerm={setTerm}
             setLimit={setLimit}
           />
-          <List article={article} />
-          {isFetching && <img src={loading} alt="loadings" />}
+          <List article={article} lastArticleRef={lastArticleRef} />
+          {isFetching && <Loading />}
         </div>
       )}
     </div>
