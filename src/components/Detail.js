@@ -8,7 +8,7 @@ const Detail = () => {
   const history = useHistory();
   return (
     <>
-      <h1 className="title" onClick={() => history.goBack()}>
+      <h1 className="title" onClick={() => history.push("/")}>
         Infinite Scrolling
       </h1>
 

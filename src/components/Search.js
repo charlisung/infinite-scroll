@@ -1,12 +1,8 @@
 import { BsSearch, BsArrowRepeat } from "react-icons/bs";
 
-const Search = ({ searchChangeHandle, term, setTerm, setLimit }) => {
+const Search = ({ searchHandle, term, setTerm, setLimit }) => {
   return (
-    <form
-      className="input-group"
-      // onSubmit={searchHandle}
-      onChange={searchChangeHandle}
-    >
+    <form className="input-group" onSubmit={searchHandle}>
       <input
         className="form-control"
         type="text"
@@ -14,7 +10,9 @@ const Search = ({ searchChangeHandle, term, setTerm, setLimit }) => {
         value={term}
         onChange={(e) => setTerm(e.target.value)}
       />
-
+      <button className="btn btn-outline-secondary" onClick={searchHandle}>
+        <BsSearch />
+      </button>
       <button
         className="btn btn-outline-secondary"
         onClick={() => {

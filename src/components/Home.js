@@ -4,12 +4,14 @@ import Search from "./Search";
 import List from "./List";
 import Loading from "../imgs/Loading";
 import Title from "./Title";
+import Result from "./Result";
 
 const Home = () => {
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(5);
   const [term, setTerm] = useState("");
   const [article, setArticle] = useState(null);
   const [isFetching, setIsFetching] = useState(false);
+  const [result, setResult] = useState(false);
 
   const { data, isPending, error } = useFetch(
     `https://jsonplaceholder.typicode.com/posts?_limit=${limit}`
@@ -19,7 +21,9 @@ const Home = () => {
     setArticle(data);
   }, [data]);
 
-  const searchChangeHandle = () => {
+  const searchHandle = (e) => {
+    e.preventDefault();
+    setResult(true);
     const updatedArticle = article.filter(
       (item) => item.title.search(term) !== -1 || item.body.search(term) !== -1
     );
@@ -46,23 +50,36 @@ const Home = () => {
   );
 
   return (
-    <div>
-      {error && <div>{error}</div>}
-      {isPending && <Loading />}
-      {article && (
-        <div>
-          <Title setLimit={setLimit} setTerm={setTerm} />
-          <Search
-            searchChangeHandle={searchChangeHandle}
+    <>
+      {result ? (
+        article && (
+          <Result
+            article={article}
             term={term}
-            setTerm={setTerm}
             setLimit={setLimit}
+            setTerm={setTerm}
           />
-          <List article={article} lastArticleRef={lastArticleRef} />
-          {isFetching && <Loading />}
+        )
+      ) : (
+        <div>
+          {error && <div>{error}</div>}
+          {isPending && <Loading />}
+          {article && (
+            <div>
+              <Title setLimit={setLimit} setTerm={setTerm} />
+              <Search
+                searchHandle={searchHandle}
+                term={term}
+                setTerm={setTerm}
+                setLimit={setLimit}
+              />
+              <List article={article} lastArticleRef={lastArticleRef} />
+              {isFetching && <Loading />}
+            </div>
+          )}
         </div>
       )}
-    </div>
+    </>
   );
 };
 
