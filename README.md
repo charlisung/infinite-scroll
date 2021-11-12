@@ -5,4 +5,4 @@
 - Search functionality (filter)
 - Layout with bootstrap
 
-![demo](https://github.com/charlisung/infinite-scroll/blob/main/src/imgs/Kapture%202021-09-30%20at%2022.58.50.gif)
+![demo](https://github.com/devCharli/infinite-scroll/blob/main/Kapture%202021-11-11%20at%2016.27.00.gif)
