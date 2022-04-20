@@ -1,8 +1,9 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Home from "./components/Home";
-import Detail from "./components/Detail";
-import Result from "./components/Result";
+import Home from "./pages/Home";
+import Detail from "./pages/Detail";
+import Result from "./pages/Result";
+import Page404 from "./pages/Page404";
 
 function App() {
   return (
@@ -10,8 +11,10 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route path="/result" component={Result} />
+          <Route path="/results" component={Result} />
+          {/* <Route path="/results" render={() => <Result />} /> */}
           <Route path="/posts/:id" component={Detail} />
+          <Route path="*" component={Page404} />
         </Switch>
       </Router>
     </div>
